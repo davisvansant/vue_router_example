@@ -1,31 +1,33 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import store from '@/store'
+import { createRouter, createWebHistory } from "vue-router";
+import useDataStore from "../stores/data";
+import LoginView from "../views/LoginView.vue";
+import DashboardView from "../views/DashboardView.vue";
 
-function checkAuthentication () {
-  if (store.state.data.authenticated === false) {
-    router.push('/')
+function checkAuthentication() {
+  const store = useDataStore();
+
+  if (store.data.authenticated === false) {
+    router.push("/");
   }
 }
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
-    path: '/',
-    name: 'login',
-    component: LoginView
+    path: "/",
+    name: "login",
+    component: LoginView,
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
+    path: "/dashboard",
+    name: "dashboard",
     component: DashboardView,
-    beforeEnter: [checkAuthentication]
-  }
-]
+    beforeEnter: [checkAuthentication],
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  history: createWebHistory(),
+  routes,
+});
 
-export default router
+export default router;
