@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router';
 import useDataStore from "../stores/data";
 
@@ -30,17 +30,72 @@ function authenticate() {
     router.push("/dashboard");
   }
 }
+
+onMounted(() =>{
+    document.body.style.backgroundColor = "";
+})
 </script>
 
 <template>
   <div class="login">
-    <h1>This is a login page</h1>
+    <img src="../assets/voiceprint-line.svg" alt="login" class="voiceprint">
+    <h1 class="login_page">This is a login page</h1>
     <form id="login" name="login" @submit.prevent="authenticate">
-      Username: <input type="text" name="username" required v-model="username" />
+      <img src="../assets/shield-user-fill.svg" alt="">
+      <input type="text" name="username" placeholder="username" required class="input" v-model="username" />
       <br />
-      Password: <input type="password" name="password" required v-model="password" />
+      <img src="../assets/shield-keyhole-fill.svg" alt="">
+      <input type="password" name="password" placeholder="password" required class="input" v-model="password" />
       <br />
-      <button>login</button>
+      <button class="login_button">
+        <img src="../assets/login-circle-line.svg" alt="">
+      </button>
     </form>
   </div>
 </template>
+
+<style scoped>
+  .login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    height: 400px;
+    width: 400px;
+    margin: 15vh;
+    border: 2px solid lightslategray;
+    border-radius: 25px;
+  }
+  .voiceprint {
+    border: 5px solid lightslategray;
+    border-radius: 100px;
+    background-color: aliceblue;
+  }
+  .login_page {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+  }
+  .input {
+    border: 3px solid gold;
+    border-radius: 5px;
+    margin: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    text-align: right;
+    background-color: aliceblue;
+  }
+  .login_button {
+    margin: 5%;
+    height: 30px;
+    width: 210px;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: gold;
+    transition-duration: .5s;
+  }
+  .login_button:hover {
+    border: 2px solid gold;
+    background-color: aliceblue;
+  }
+</style>
