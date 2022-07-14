@@ -12,7 +12,7 @@ const username = ref('');
 const password = ref('');
 
 dataWorker.addEventListener('message', message => { 
-  console.log("worker has recevied message", message.data);
+  console.log("login has recevied message", message.data);
 
   switch (message.data) {
     case 'authenticated': {

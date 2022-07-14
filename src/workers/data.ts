@@ -5,10 +5,15 @@ interface LoginInfo {
     password: string,
 };
 
-let loginInfo: LoginInfo = {
-    username: '',
-    password: '',
-};
+enum MessageKind {
+    LoginInfo = "LOGININFO",
+    Token = "TOKEN",
+}
+
+interface Message {
+    kind: MessageKind,
+    contents: string | LoginInfo,
+}
 
 addEventListener('message', message => { 
     console.log("worker has recevied message", message.data);
@@ -24,12 +29,29 @@ addEventListener('message', message => {
         case 'dashboard': {
             dashboard(token);
 
-            loginInfo = {
+            const contents: LoginInfo = {
                 username: 'some_awesome_username',
                 password: 'some_awesome_password',
             };
 
+            const loginInfo: Message = {
+                kind: MessageKind.LoginInfo,
+                contents: contents,
+            }
+
             postMessage(loginInfo);
+
+            break;
+        }
+        case 'token': {
+            console.log("received token!");
+
+            const tokenMessage: Message = {
+                kind: MessageKind.Token,
+                contents: token,
+            };
+
+            postMessage(tokenMessage);
 
             break;
         }
@@ -47,4 +69,4 @@ function dashboard (token: string) {
     console.log(token);
 }
 
-export default LoginInfo;
+export default Message;
