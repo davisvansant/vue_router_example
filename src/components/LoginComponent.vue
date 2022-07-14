@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { useRouter } from 'vue-router';
 import useDataStore from "../stores/data";
+
+const dataWorker:Worker = inject('worker', Worker.prototype);
 
 const router = useRouter()
 const store = useDataStore();
@@ -9,27 +11,41 @@ const store = useDataStore();
 const username = ref('');
 const password = ref('');
 
+dataWorker.addEventListener('message', message => { 
+  console.log("worker has recevied message", message.data);
+
+  switch (message.data) {
+    case 'authenticated': {
+      store.data.authenticated = true;
+      store.data.username = username.value;
+      store.data.password = password.value;
+
+      console.log("authenticated ->", store.data.authenticated);
+      console.log("username ->", store.data.username);
+      console.log("password ->", store.data.password);
+
+      if (store.data.authenticated === true) {
+        router.push("/dashboard");
+      }
+    }
+  }
+});
+
 function authenticate() {
   console.log("username", username.value);
   console.log("password", password.value);
 
   console.log("authenticated ->", store.data.authenticated);
 
-  store.data.authenticated = true;
-  store.data.username = username.value;
-  store.data.password = password.value;
+  dataWorker.postMessage('login');
+};
 
-  console.log("authenticated ->", store.data.authenticated);
-  console.log("username ->", store.data.username);
-  console.log("password ->", store.data.password);
+console.log("authenticated ->", store.data.authenticated);
+console.log("username ->", store.data.username);
+console.log("password ->", store.data.password);
 
-  username.value = "";
-  password.value = "";
-
-  if (store.data.authenticated === true) {
-    router.push("/dashboard");
-  }
-}
+username.value = "";
+password.value = "";
 
 onMounted(() =>{
     document.body.style.backgroundColor = "";

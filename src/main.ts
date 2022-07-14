@@ -9,4 +9,8 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 
+const dataWorker = new Worker('/src/workers/data.ts');
+
+app.provide('worker', dataWorker);
+
 app.mount("#app");
